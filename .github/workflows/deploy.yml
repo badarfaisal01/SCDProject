@@ -13,33 +13,43 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Start Minikube
+      shell: powershell
       run: |
-        echo "Checking Minikube status..."
-        minikube status || minikube start
-      shell: bash
+        Write-Output "Checking Minikube status..."
+        $status = minikube status
+        if ($status -notmatch "Running") {
+          Write-Output "Starting Minikube..."
+          minikube start
+        }
 
     - name: Set up Docker environment for Minikube
+      shell: powershell
       run: |
-        echo "Setting Docker env for Minikube"
-        eval $(minikube docker-env)
-      shell: bash
+        Write-Output "Setting Docker env for Minikube"
+        & minikube -p minikube docker-env --shell powershell | Invoke-Expression
 
     - name: Build frontend image
       run: docker build -t badarfaisal98/scdfrontend:latest ./client
+      shell: powershell
 
     - name: Build backend image
       run: docker build -t badarfaisal98/scdbackend:latest ./server
+      shell: powershell
 
     - name: Docker Hub Login
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      shell: powershell
 
     - name: Push frontend image
       run: docker push badarfaisal98/scdfrontend:latest
+      shell: powershell
 
     - name: Push backend image
       run: docker push badarfaisal98/scdbackend:latest
+      shell: powershell
 
     - name: Deploy to Minikube
+      shell: powershell
       run: |
         kubectl apply -f k8s/client-deployment.yaml
         kubectl apply -f k8s/server-deployment.yaml
