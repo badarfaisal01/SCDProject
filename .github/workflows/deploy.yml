@@ -12,6 +12,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+      echo "Checking Minikube status..."
+       minikube status
+
+      echo "Starting Minikube (if not already running)..."
+        minikube start
+
     - name: Set up Docker environment for Minikube
       run: |
         echo "Setting Docker env for Minikube"
