@@ -16,14 +16,13 @@ jobs:
       run: |
         echo "Checking Minikube status..."
         minikube status || minikube start
-      shell: pwsh
+      shell: bash
 
     - name: Set up Docker environment for Minikube
       run: |
         echo "Setting Docker env for Minikube"
-        $envOutput = minikube docker-env --shell powershell
-        Invoke-Expression $envOutput
-      shell: pwsh
+        eval $(minikube docker-env)
+      shell: bash
 
     - name: Build frontend image
       run: docker build -t badarfaisal98/scdfrontend:latest ./client
