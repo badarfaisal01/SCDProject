@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: client
-          image: ayeshakhzafar/mern-frontend:v101
+          image: badarfaisal98/scdfrontend:latest
           ports:
             - containerPort: 3000

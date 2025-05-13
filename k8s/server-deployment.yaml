@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: ayeshakhzafar/mern-backend:v101
+          image: badarfaisal98/scdbackend:latest
           ports:
             - containerPort: 5000
           
