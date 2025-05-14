@@ -27,7 +27,12 @@ jobs:
       run: |
         Write-Output "Setting Docker env for Minikube"
         $envScript = minikube -p minikube docker-env --shell powershell
-        Invoke-Expression $envScript
+        if ($envScript -match 'Env:') {
+          Invoke-Expression $envScript
+        } else {
+          Write-Output "minikube docker-env returned unexpected output: $envScript"
+          exit 1
+        }
 
     - name: Build frontend image
       shell: powershell
