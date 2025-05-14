@@ -24,17 +24,22 @@ jobs:
 
     - name: Build frontend image
       shell: powershell
-      run: docker build -t scdfrontend:latest ./client
+      run: |
+        Write-Output "Building frontend Docker image..."
+        docker build -t scdfrontend:latest ./client
 
     - name: Build backend image
       shell: powershell
-      run: docker build -t scdbackend:latest ./server
+      run: |
+        Write-Output "Building backend Docker image..."
+        docker build -t scdbackend:latest ./server
 
     - name: Load images into Minikube
       shell: powershell
       run: |
-        Write-Output "Loading images into Minikube..."
+        Write-Output "Loading frontend image into Minikube..."
         minikube image load scdfrontend:latest
+        Write-Output "Loading backend image into Minikube..."
         minikube image load scdbackend:latest
 
     - name: Deploy to Minikube
