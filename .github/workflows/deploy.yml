@@ -28,7 +28,7 @@ jobs:
         Write-Output "Setting Docker env for Minikube"
         $envVars = minikube -p minikube docker-env --shell powershell
         $envVars | ForEach-Object {
-          if ($_ -match "^\$Env:([^=]+) = \"(.*)\"") {
+          if ($_ -match '^\$Env:([^=]+) = "(.*)"') {
             $name = $matches[1]
             $value = $matches[2]
             [System.Environment]::SetEnvironmentVariable($name, $value, "Process")
@@ -37,24 +37,24 @@ jobs:
         }
 
     - name: Build frontend image
-      run: docker build -t badarfaisal98/scdfrontend:latest ./client
       shell: powershell
+      run: docker build -t badarfaisal98/scdfrontend:latest ./client
 
     - name: Build backend image
-      run: docker build -t badarfaisal98/scdbackend:latest ./server
       shell: powershell
+      run: docker build -t badarfaisal98/scdbackend:latest ./server
 
     - name: Docker Hub Login
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       shell: powershell
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Push frontend image
-      run: docker push badarfaisal98/scdfrontend:latest
       shell: powershell
+      run: docker push badarfaisal98/scdfrontend:latest
 
     - name: Push backend image
-      run: docker push badarfaisal98/scdbackend:latest
       shell: powershell
+      run: docker push badarfaisal98/scdbackend:latest
 
     - name: Deploy to Minikube
       shell: powershell
