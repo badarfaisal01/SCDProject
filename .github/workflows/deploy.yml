@@ -26,7 +26,15 @@ jobs:
       shell: powershell
       run: |
         Write-Output "Setting Docker env for Minikube"
-        & minikube -p minikube docker-env --shell powershell | Invoke-Expression
+        $envVars = minikube -p minikube docker-env --shell powershell
+        $envVars | ForEach-Object {
+          if ($_ -match "^\$Env:([^=]+) = \"(.*)\"") {
+            $name = $matches[1]
+            $value = $matches[2]
+            [System.Environment]::SetEnvironmentVariable($name, $value, "Process")
+            Write-Output "Set $name"
+          }
+        }
 
     - name: Build frontend image
       run: docker build -t badarfaisal98/scdfrontend:latest ./client
